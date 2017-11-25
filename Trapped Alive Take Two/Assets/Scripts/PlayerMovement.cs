@@ -63,6 +63,14 @@ public class PlayerMovement : MonoBehaviour
     Sprite Circle;
 
     [SerializeField]
+    [Range(0, 10)]
+    float fallMultiplier = 2.5f;
+
+    [SerializeField]
+    [Range(0, 10)]
+    float lowJumpMultiplier = 2f;
+
+    [SerializeField]
     //The jump height for the rectangle
     float RectJumpHeight = 7;
 
@@ -224,6 +232,15 @@ public class PlayerMovement : MonoBehaviour
                 //Stop the player movement
                 PlayerRigid.velocity = new Vector2(0, PlayerRigid.velocity.y);
             }
+        }
+
+        if (PlayerRigid.velocity.y < 0)
+        {
+            PlayerRigid.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (PlayerRigid.velocity.y > 0 && !Input.GetKey(JumpKey))
+        {
+            PlayerRigid.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
     }
 

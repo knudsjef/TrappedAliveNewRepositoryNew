@@ -1,28 +1,127 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
+public class HoveringLogic
+{
+    [SerializeField, Range(0, 5), Tooltip("The amount of height the player will be above the ground while floating")]
+    public float heightMultiplier = 2;
+
+    [SerializeField, Tooltip("Whether or not the player twists in air while floating")]
+    public bool twisting;
+
+    [SerializeField, Range(0, 10), Tooltip("The speed at which the player twists in air while floating")]
+    public float rotationMultiplier = 3;
+
+    [SerializeField, Range(0, 90), Tooltip("The distance (in degrees) the player twists in air while floating")]
+    public float distanceOfRotation = 3;
+
+    [SerializeField, Tooltip("Whether or not the player bobs in air while floating")]
+    public bool bobbing;
+
+    [SerializeField, Range(0, 50), Tooltip("The speed at which the player bobs in air while floating")]
+    public float bobMultiplier = 2;
+
+    [SerializeField, Range(0, 1), Tooltip("The highter this goes the less distance the player bobs in air while floating")]
+    public float bobHeight = 0.055f;
+
+    [HideInInspector]
+    public bool isFloating;
+}
+
+[System.Serializable]
+public class PlayerSprites
+{
+    [SerializeField, Tooltip("The sprite of the square")]
+    public Sprite Square;
+
+    [SerializeField, Tooltip("The sprite of the rectangle")]
+    public Sprite Rectangle;
+
+    [SerializeField, Tooltip("The sprite of the triangle")]
+    public Sprite Triangle;
+
+    [SerializeField, Tooltip("The sprite of the circle")]
+    public Sprite Circle;
+}
+
+[System.Serializable]
+public class PlayerStats
+{
+
+    [SerializeField, Tooltip("The starting letter of the starting shape (T = Triangle, R = Rectangle, S = Square, C = Circle)")]
+    public char startShape = 'S';
+
+    [SerializeField, Tooltip("The speed at which the square moves")]
+    public float squareMovespeed = 300;
+
+    [SerializeField, Tooltip("The speed at which the rectangle moves")]
+    public float rectangleMovespeed = 150;
+
+    [SerializeField, Tooltip("The speed at which the triangle moves")]
+    public float triangleMovespeed = 150;
+
+    [SerializeField, Tooltip("The speed at which the circle moves")]
+    public float circleMovespeed = 150;
+
+    [SerializeField, Tooltip("The height the rectangle will jump")]
+    public float rectJumpHeight = 7;
+
+    [SerializeField, Tooltip("The height the fallen rectangle will jump")]
+    public float rectFallJumpHeight = 3;
+
+    [SerializeField, Tooltip("The offset dimentions of the square collider (copy and paste this from the collider)")]
+    public Vector2 squareColliderOffset = new Vector2(-0.00801706f, 6.02603e-05f);
+
+    [SerializeField, Tooltip("The size dimentions of the square collider (copy and paste this from the collider)")]
+    public Vector2 squareColliderSize = new Vector2(1.14614f, 1.166567f);
+
+    [SerializeField, Tooltip("The offset dimentions of the rectangle collider (copy and paste this from the collider)")]
+    public Vector2 rectangleColliderOffset = new Vector2(0.001571655f, 0.00452995f);
+
+    [SerializeField, Tooltip("The size dimentions of the rectangle collider (copy and paste this from the collider)")]
+    public Vector2 rectangleColliderSize = new Vector2(0.5038174f, 2.013272f);
+}
+
+[System.Serializable]
+public class KeyPresses
+{
+    [SerializeField]
+    public KeyCode rightKey;
+
+    [SerializeField]
+    public KeyCode leftKey;
+
+    [SerializeField]
+    public KeyCode jumpKey;
+
+    [SerializeField]
+    public KeyCode fallKey;
+}
+
 public class PlayerMovement : MonoBehaviour
 {
-    // The player game object
-    GameObject Player;
 
     //The rigidbody2D attached to the player
     Rigidbody2D PlayerRigid;
 
-    [SerializeField]
-    //The speed at which the player moves
+    [SerializeField, Tooltip("The holder of all of the square hovering logic")]
+    HoveringLogic hover;
+
+    [SerializeField, Tooltip("The holder of all the sprites")]
+    PlayerSprites sprites;
+
+    [SerializeField, Tooltip("The holder of all the player variables such as move speed")]
+    PlayerStats playerLogic;
+        
     float MoveSpeed = 5;
 
-    [SerializeField]
     //The height the player will jump
-    float JumpHeight;
-    //The previous move speed the player was at
-    float PrevMoveSpeed;
-    //The Gravity scale on the Y axis
-    float GravityY;
+    float JumpHeight = 7;
     //If the player can jump or not
     bool CanJump;
     //If the player is moving left or not
+    [HideInInspector]
     public bool Left = false;
     //If the player is a square
     bool IsSquare;
@@ -30,8 +129,6 @@ public class PlayerMovement : MonoBehaviour
     bool IsRect;
     //If the player is fallen or not
     bool Fallen;
-    //If the player on a ramp
-    bool OnRamp;
     //The Sprite Renderer attached to the player
     SpriteRenderer PlayerSprite;
     //The box collider attached to the player, is used for square and rectangle collisions
@@ -41,75 +138,18 @@ public class PlayerMovement : MonoBehaviour
     //The circle collider attached to the plyaer, is used for circle collisions
     CircleCollider2D CirCollider;
 
-    [SerializeField]
-    [Header("T=Triangle S=Square R=Rectangle C=Circle")]
-    //The shape the player will start as
-    char StartShape;
-
-    [SerializeField]
-    //The sprite for the Square
-    Sprite Square;
-
-    [SerializeField]
-    //The sprite for the Rectangle
-    Sprite Rectangle;
-
-    [SerializeField]
-    //The sprite for the Triangle
-    Sprite Triangle;
-
-    [SerializeField]
-    //The sprite for the Circle
-    Sprite Circle;
-
-    [SerializeField]
-    [Range(0, 10)]
-    float fallMultiplier = 2.5f;
-
-    [SerializeField]
-    [Range(0, 10)]
-    float lowJumpMultiplier = 2f;
-
-    [SerializeField]
-    //The jump height for the rectangle
-    float RectJumpHeight = 7;
-
-    [SerializeField]
-    //The jump height for the fallen rectangle
-    float FallJumpHeight = 3;
-
-    [SerializeField]
-    //The offset for the square version of the box collider
-    Vector2 SquareOffset;
-
-    [SerializeField]
-    //The size for the square version of the box collider
-    Vector2 SquareSize;
-
-    [SerializeField]
-    //The offset for the rectangle version of the box collider
-    Vector2 RectangleOffset;
-
-    [SerializeField]
-    //The size for the rectangle version of the box collider
-    Vector2 RectangleSize;
-
-    public KeyCode RightKey;
-    public KeyCode LeftKey;
-    public KeyCode JumpKey;
-    public KeyCode FallKey;
+    RaycastHit2D hit;
 
     // When the game starts
     void Start()
     {
-        //Set the Player variable to this gameobject
-        Player = this.gameObject;
+
         //Set these next variables to their components attached to the player
-        PlayerRigid = Player.GetComponent<Rigidbody2D>();
-        PlayerSprite = Player.GetComponent<SpriteRenderer>();
-        RectCollider = Player.GetComponent<BoxCollider2D>();
-        TriCollider = Player.GetComponent<PolygonCollider2D>();
-        CirCollider = Player.GetComponent<CircleCollider2D>();
+        PlayerRigid = GetComponent<Rigidbody2D>();
+        PlayerSprite = GetComponent<SpriteRenderer>();
+        RectCollider = GetComponent<BoxCollider2D>();
+        TriCollider = GetComponent<PolygonCollider2D>();
+        CirCollider = GetComponent<CircleCollider2D>();
 
         if(PlayerPrefs.GetString("Move Right Key") == "")
         {
@@ -130,10 +170,11 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerPrefs.SetString("Fall Key", "left shift");
         }
-        
+
+        hit = Physics2D.Raycast(this.transform.position, Vector2.down);
 
         //Change the player shape to the starting shape
-        ChangeShape(StartShape);
+        ChangeShape(char.ToUpper(playerLogic.startShape));
     }
 
     // Update is called once per frame
@@ -152,11 +193,11 @@ public class PlayerMovement : MonoBehaviour
                 //Move right
                 if (Fallen)
                 {
-                    Move(-Player.transform.up);
+                    Move(-transform.up);
                 }
                 else
                 {
-                    Move(Player.transform.right);
+                    Move(transform.right);
                 }
                 Left = false;
             }
@@ -176,11 +217,11 @@ public class PlayerMovement : MonoBehaviour
                     //Move left
                     if (Fallen)
                     {
-                        Move(Player.transform.up);
+                        Move(transform.up);
                     }
                     else
                     {
-                        Move(-Player.transform.right);
+                        Move(-transform.right);
                     }
                     Left = true;
                 }
@@ -214,14 +255,38 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        if (hover.isFloating)
+        {
+            this.transform.position = new Vector2(this.transform.position.x, hit.point.y + hover.heightMultiplier);
+            if (hover.twisting)
+            {
+                this.transform.position = new Vector2(this.transform.position.x, hit.point.y + hover.heightMultiplier);
+                this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, hover.distanceOfRotation * Mathf.Sin(Time.time * hover.rotationMultiplier)));
+            }
+
+            if (hover.bobbing)
+            {
+                this.transform.position = new Vector2(this.transform.position.x, hit.point.y + hover.heightMultiplier + (Mathf.Sin(Time.time * hover.bobMultiplier) * hover.bobHeight));
+            }
+        }
+        else
+        {
+            this.transform.rotation = Quaternion.Euler(Vector3.zero);
+        }
+
         //Check if LEFT SHIFT is pressed
-        if (Input.GetKey(PlayerPrefs.GetString("Fall Key")))
+        if (Input.GetKeyDown(PlayerPrefs.GetString("Fall Key")))
         {
             //If the player is not a square but a rectangle
             if (IsRect)
             {
                 //Make the rectangle fall
                 RectFall();
+            }
+            else if (IsSquare)
+            {
+                hit = Physics2D.Raycast(transform.position, -Vector2.up);
+                hover.isFloating = !hover.isFloating;
             }
         }
         //Check if the player stops pressing the horizontal move keys
@@ -232,15 +297,6 @@ public class PlayerMovement : MonoBehaviour
                 //Stop the player movement
                 PlayerRigid.velocity = new Vector2(0, PlayerRigid.velocity.y);
             }
-        }
-
-        if (PlayerRigid.velocity.y < 0)
-        {
-            PlayerRigid.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-        else if (PlayerRigid.velocity.y > 0 && !Input.GetKey(JumpKey))
-        {
-            PlayerRigid.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
     }
 
@@ -279,26 +335,6 @@ public class PlayerMovement : MonoBehaviour
                 CanJump = false;
             }
         }
-    }
-
-    /******************************************************************************
-     *     The STOP MOVEMENT function stops the player from being able to move    *
-     ******************************************************************************/
-
-    void StopMovement()
-    {
-        PrevMoveSpeed = MoveSpeed;
-        MoveSpeed = 0;
-    }
-
-    /******************************************************************************
-     *The CONTINUE MOVEMENT function is the opposite of STOP MOVEMENT and lets the*
-     *                             player move again                              *
-     ******************************************************************************/
-
-    void ContinueMovement()
-    {
-        MoveSpeed = PrevMoveSpeed;
     }
 
     /******************************************************************************
@@ -386,18 +422,18 @@ public class PlayerMovement : MonoBehaviour
     void ToSquare()
     {
         //Change the sprite to a square
-        PlayerSprite.sprite = Square;
+        PlayerSprite.sprite = sprites.Square;
         //Enable the rectangle collider and disable all the others
         RectCollider.enabled = true;
         TriCollider.enabled = false;
         CirCollider.enabled = false;
         //Refit the collider for the square
-        RectCollider.offset = SquareOffset;
-        RectCollider.size = SquareSize;
+        RectCollider.offset = playerLogic.squareColliderOffset;
+        RectCollider.size = playerLogic.squareColliderSize;
         //Set the jump height parameter for the square
         JumpHeight = 3;
         //Change the move speed for the square
-        MoveSpeed = 300;
+        MoveSpeed = playerLogic.squareMovespeed;
         //The player is now a square...
         IsSquare = true;
         //...not a rectangle
@@ -411,18 +447,18 @@ public class PlayerMovement : MonoBehaviour
     void ToRectangle()
     {
         //Change the sprite to a rectangle
-        PlayerSprite.sprite = Rectangle;
+        PlayerSprite.sprite = sprites.Rectangle;
         //Enable the rectangle collider and disable all the rest
         RectCollider.enabled = true;
         TriCollider.enabled = false;
         CirCollider.enabled = false;
         //Refit the collider for the rectangle
-        RectCollider.offset = RectangleOffset;
-        RectCollider.size = RectangleSize;
+        RectCollider.offset = playerLogic.rectangleColliderOffset;
+        RectCollider.size = playerLogic.rectangleColliderSize;
         //Set the jump height parameter for the rectangle
-        JumpHeight = RectJumpHeight;
+        JumpHeight = playerLogic.rectJumpHeight;
         //Change the move speed for the rectangle
-        MoveSpeed = 150;
+        MoveSpeed = playerLogic.rectangleMovespeed;
         //The player is now a rectangle...
         IsRect = true;
         //...not a square
@@ -430,7 +466,7 @@ public class PlayerMovement : MonoBehaviour
         //The rectangle is not fallen yet
         Fallen = false;
         //Set the rotation to 0, 0, 0
-        Player.transform.rotation = Quaternion.Euler(0, 0, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     /******************************************************************************
@@ -440,7 +476,7 @@ public class PlayerMovement : MonoBehaviour
     void ToTriangle()
     {
         //Change the sprite to a triangle
-        PlayerSprite.sprite = Triangle;
+        PlayerSprite.sprite = sprites.Triangle;
         //Enable the triangle collider and disable the rest
         RectCollider.enabled = false;
         TriCollider.enabled = true;
@@ -449,6 +485,7 @@ public class PlayerMovement : MonoBehaviour
         IsSquare = false;
         //...or a rectangle
         IsRect = false;
+        MoveSpeed = playerLogic.triangleMovespeed;
     }
 
     /******************************************************************************
@@ -458,7 +495,7 @@ public class PlayerMovement : MonoBehaviour
     void ToCircle()
     {
         //Change the sprite to a circle
-        PlayerSprite.sprite = Circle;
+        PlayerSprite.sprite = sprites.Circle;
         //Enable the circle collider and disable the rest
         RectCollider.enabled = false;
         TriCollider.enabled = false;
@@ -467,6 +504,7 @@ public class PlayerMovement : MonoBehaviour
         IsSquare = false;
         //...or a rectangle
         IsRect = false;
+        MoveSpeed = playerLogic.circleMovespeed;
     }
 
     /******************************************************************************
@@ -476,9 +514,9 @@ public class PlayerMovement : MonoBehaviour
     void RectFall()
     {
         //Rotate the rectangle by 90 degrees
-        Player.transform.rotation = Quaternion.Euler(0, 0, 90);
+        transform.rotation = Quaternion.Euler(0, 0, 90);
         //Set the jump height to the variable of the fallen jump height
-        JumpHeight = FallJumpHeight;
+        JumpHeight = playerLogic.rectFallJumpHeight;
         //The rectangle is now fallen
         Fallen = true;
     }

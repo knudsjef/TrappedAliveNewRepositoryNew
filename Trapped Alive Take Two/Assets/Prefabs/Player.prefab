@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 58000013403404600}
   - component: {fileID: 60000012015581966}
   - component: {fileID: 50000010124315342}
+  - component: {fileID: 114956275921184762}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -39,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012062602216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.99, y: 12.88, z: 0}
+  m_LocalPosition: {x: -8.346, y: 1.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -96,7 +97,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1.3333334, y: 1.3333334}
     newSize: {x: 7.5784774, y: 7.578478}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -123,18 +124,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0015716553, y: 0.004529953}
+  m_Offset: {x: -0.008017063, y: 0.000060260296}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1.3333334, y: 1.3333334}
     newSize: {x: 7.5784774, y: 7.578478}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5038174, y: 2.0123718}
+  m_Size: {x: 1.1461401, y: 1.1665674}
   m_EdgeRadius: 0
 --- !u!114 &114000011561854708
 MonoBehaviour:
@@ -147,24 +148,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6a22abbbeb17247bdc057df0967fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 300
+  hoverHeightMultiplier: 2
+  Twist: 1
+  rotationMultiplier: 3
+  Bob: 0
+  MoveSpeed: 600
   JumpHeight: 7
   Left: 0
-  StartShape: 84
-  Square: {fileID: 21300000, guid: 6ee4529b689b66442a5a374feb9a4113, type: 3}
+  StartShape: 83
+  Square: {fileID: 21300000, guid: 8c6ee3a7429f6004bbe73ace36b729ec, type: 3}
   Rectangle: {fileID: 21300000, guid: be6b7ac6aa7f880459c908caf1d73229, type: 3}
   Triangle: {fileID: 21300000, guid: 6b012e81e11a26b439826cf08b3928b3, type: 3}
   Circle: {fileID: 21300000, guid: 37901c2bd43dfd94f9ab728c3c671d9f, type: 3}
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
   RectJumpHeight: 7
   FallJumpHeight: 3
-  SquareOffset: {x: 0.005700111, y: -0.477301}
-  SquareSize: {x: 1.008967, y: 0.9909859}
+  SquareOffset: {x: -0.008017063, y: 0.0000602603}
+  SquareSize: {x: 1.14614, y: 1.166567}
   RectangleOffset: {x: 0.001571655, y: 0.004529953}
   RectangleSize: {x: 0.5038174, y: 2.012372}
-  RightKey: 0
-  LeftKey: 0
-  JumpKey: 0
-  FallKey: 0
+  RightKey: 100
+  LeftKey: 97
+  JumpKey: 32
+  FallKey: 304
+--- !u!114 &114956275921184762
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012062602216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58e736b3d97d5a49b6360603a130c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Lights:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  OnLight: {fileID: 21300000, guid: ce0fb4345096d0b4d90c8f1b80f71209, type: 3}
+  Go: 0
 --- !u!212 &212000012120122972
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -199,7 +227,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: be6b7ac6aa7f880459c908caf1d73229, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8c6ee3a7429f6004bbe73ace36b729ec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -19,6 +19,6 @@ public class ParralaxScrolling : MonoBehaviour {
 
         //Debug.Log(Player.velocity.x);
 
-        this.transform.position = new Vector2(this.transform.position.x + (PARALLAX_SPEED * Player.velocity.x), this.transform.position.y + (PARALLAX_SPEED * Player.velocity.y));
+        this.transform.position = new Vector2(this.transform.position.x + (PARALLAX_SPEED * Player.velocity.x), this.transform.position.y /*+ (PARALLAX_SPEED * Player.velocity.y) */);
 	}
 }

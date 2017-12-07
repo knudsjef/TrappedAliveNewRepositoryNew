@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Main Menu.unity
     guid: 039deb363657b1b4d9e295d4e12091f6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Level One.unity
     guid: 42d1247754b13054c8ba98167fb131d4
+  - enabled: 1
+    path: Assets/Scenes/Ghosting Test.unity
+    guid: a6a7712466ee5c34596b7727512e21b8

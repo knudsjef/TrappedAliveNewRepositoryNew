@@ -148,30 +148,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6a22abbbeb17247bdc057df0967fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverHeightMultiplier: 2
-  Twist: 1
-  rotationMultiplier: 3
-  Bob: 0
-  MoveSpeed: 600
-  JumpHeight: 7
+  hover:
+    heightMultiplier: 2
+    twisting: 0
+    rotationMultiplier: 3
+    distanceOfRotation: 3
+    bobbing: 0
+    bobMultiplier: 2
+    bobHeight: 0.055
+    isFloating: 0
+  sprites:
+    Square: {fileID: 21300000, guid: 8c6ee3a7429f6004bbe73ace36b729ec, type: 3}
+    Rectangle: {fileID: 21300000, guid: be6b7ac6aa7f880459c908caf1d73229, type: 3}
+    Triangle: {fileID: 21300000, guid: 6b012e81e11a26b439826cf08b3928b3, type: 3}
+    Circle: {fileID: 21300000, guid: 37901c2bd43dfd94f9ab728c3c671d9f, type: 3}
+  playerLogic:
+    startShape: 83
+    squareMovespeed: 300
+    rectangleMovespeed: 150
+    triangleMovespeed: 150
+    circleMovespeed: 150
+    rectJumpHeight: 7
+    rectFallJumpHeight: 3
+    squareColliderOffset: {x: -0.00801706, y: 0.0000602603}
+    squareColliderSize: {x: 1.14614, y: 1.166567}
+    rectangleColliderOffset: {x: 0.001571655, y: 0.00452995}
+    rectangleColliderSize: {x: 0.5038174, y: 2.013272}
   Left: 0
-  StartShape: 83
-  Square: {fileID: 21300000, guid: 8c6ee3a7429f6004bbe73ace36b729ec, type: 3}
-  Rectangle: {fileID: 21300000, guid: be6b7ac6aa7f880459c908caf1d73229, type: 3}
-  Triangle: {fileID: 21300000, guid: 6b012e81e11a26b439826cf08b3928b3, type: 3}
-  Circle: {fileID: 21300000, guid: 37901c2bd43dfd94f9ab728c3c671d9f, type: 3}
-  fallMultiplier: 2.5
-  lowJumpMultiplier: 2
-  RectJumpHeight: 7
-  FallJumpHeight: 3
-  SquareOffset: {x: -0.008017063, y: 0.0000602603}
-  SquareSize: {x: 1.14614, y: 1.166567}
-  RectangleOffset: {x: 0.001571655, y: 0.004529953}
-  RectangleSize: {x: 0.5038174, y: 2.012372}
-  RightKey: 100
-  LeftKey: 97
-  JumpKey: 32
-  FallKey: 304
 --- !u!114 &114956275921184762
 MonoBehaviour:
   m_ObjectHideFlags: 1
